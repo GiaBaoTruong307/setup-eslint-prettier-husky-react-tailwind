@@ -1,73 +1,51 @@
-# React + TypeScript + Vite
+# Setup ESLint + Prettier + Husky (chuẩn 2025 – chỉ làm 1 lần là xong mãi mãi)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Dành cho dự án **Vite + React 19 + TypeScript** (cách này chạy ngon với cả React 18 nữa)
 
-Currently, two official plugins are available:
+## Bước 1: Cài các package cần thiết
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+npm install -D eslint prettier eslint-config-prettier eslint-plugin-react-refresh husky lint-staged globals typescript-eslint
 
-## React Compiler
+## Bước 2: Tạo file .prettierrc (root dự án)
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+{
+"semi": false,
+"singleQuote": true,
+"trailingComma": "es5",
+"tabWidth": 2,
+"printWidth": 100
+}
 
-## Expanding the ESLint configuration
+## Bước 3: Tạo file eslint.config.js (root dự án) – copy nguyên xi filee eslint.config.js
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Bước 4: Thêm script vào package.json
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+"scripts": {
+"dev": "vite",
+"build": "tsc -b && vite build",
+"preview": "vite preview",
+"lint": "eslint .",
+"lint:fix": "eslint . --fix",
+"format": "prettier --write .",
+"prepare": "husky"
+},
+"lint-staged": {
+"src/\*_/_.{ts,tsx}": "eslint --fix",
+"\*.{ts,tsx,js,jsx,json,css,md}": "prettier --write"
+}
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Bước 5: Cài Husky + lint-staged
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+npx husky init
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Sau đó sửa file .husky/pre-commit thành đúng 1 dòng này:
+npm exec lint-staged
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Bước 6: Tạo file .lintstagedrc.json (tùy chọn, nhưng gọn hơn)
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+{
+"src/\*_/_.{ts,tsx}": "eslint --fix",
+"\*.{ts,tsx,js,jsx,json,css,md}": "prettier --write"
+}
+
+Xong!
