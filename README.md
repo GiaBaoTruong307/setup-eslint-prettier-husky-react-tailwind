@@ -1,6 +1,4 @@
-# Setup ESLint + Prettier + Husky (chuẩn 2025 – chỉ làm 1 lần là xong mãi mãi)
-
-Dành cho dự án **Vite + React 19 + TypeScript** (cách này chạy ngon với cả React 18 nữa)
+# Setup React + ESLint + Prettier + Husky + Tailwind
 
 ## Bước 1: Cài các package cần thiết
 
@@ -47,5 +45,57 @@ npm exec lint-staged
 "src/\*_/_.{ts,tsx}": "eslint --fix",
 "\*.{ts,tsx,js,jsx,json,css,md}": "prettier --write"
 }
+
+## Bước 7: Cài Tailwind v3 + plugin sort class (chỉ chạy 1 lần)
+
+Tạo/Copy 3 file config (nguyên xi)
+
+tailwind.config.js:
+/** @type {import('tailwindcss').Config} \*/
+export default {
+content: ["./index.html", "./src/**/\*.{js,ts,jsx,tsx}"],
+theme: { extend: {} },
+plugins: []
+}
+
+postcss.config.js:
+export default {
+plugins: {
+tailwindcss: {},
+autoprefixer: {},
+},
+}
+
+src/index.css (hoặc src/main.css – thêm 3 dòng này vào đầu file)
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+Sửa .prettierrc (để class tự sort khi save)
+Thêm dòng "plugins" vào file .prettierrc hiện tại của bạn:
+{
+"semi": false,
+"singleQuote": true,
+"trailingComma": "es5",
+"tabWidth": 2,
+"printWidth": 100,
+"plugins": ["prettier-plugin-tailwindcss"]
+}
+
+Sửa eslint.config.js (thêm 2 dòng duy nhất)
+JavaScript// Thêm dòng import này lên đầu cùng các import khác
+import tailwind from 'eslint-plugin-tailwindcss'
+
+// Trong phần extends của src/\*_/_.{ts,tsx} thêm 1 dòng:
+...tailwind.configs['flat/recommended'],
+
+→ File eslint.config.js hoàn chỉnh sẽ có đoạn extends giống thế này:
+JavaScriptextends: [
+js.configs.recommended,
+...tseslint.configs.recommended,
+reactRefresh.configs.vite,
+prettierConfig,
+...tailwind.configs['flat/recommended'], // ← thêm dòng này
+],
 
 Xong!

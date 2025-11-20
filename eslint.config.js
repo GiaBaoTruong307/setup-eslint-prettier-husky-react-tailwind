@@ -3,6 +3,7 @@ import globals from 'globals'
 import tseslint from 'typescript-eslint'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import prettierConfig from 'eslint-config-prettier'
+import tailwind from 'eslint-plugin-tailwindcss'
 
 export default tseslint.config(
   { ignores: ['dist', 'node_modules'] },
@@ -14,6 +15,7 @@ export default tseslint.config(
       ...tseslint.configs.recommended,
       reactRefresh.configs.vite,
       prettierConfig,
+      ...tailwind.configs['flat/recommended'],
     ],
     languageOptions: {
       globals: globals.browser,
@@ -33,9 +35,7 @@ export default tseslint.config(
 
   {
     files: ['*.{js,cjs,mjs,ts}', 'vite.config.*', 'eslint.config.*'],
-    languageOptions: {
-      globals: globals.node,
-    },
+    languageOptions: { globals: globals.node },
     rules: {
       '@typescript-eslint/no-var-requires': 'off',
       'no-console': 'off',

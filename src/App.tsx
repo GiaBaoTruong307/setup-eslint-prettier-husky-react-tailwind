@@ -1,11 +1,9 @@
 import './App.css'
-import NewPage from './pages/NewPage'
 
 function App() {
   return (
     <>
-      <div>Hello World</div>
-      <NewPage />
+      <div className="text-red-500">Hello World</div>
     </>
   )
 }
